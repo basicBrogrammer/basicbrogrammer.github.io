@@ -1,18 +1,16 @@
 <template>
-  <nuxt-link :class="tag" :to="{ name: 'index', query: { tag } }">{{
+  <NuxtLink :class="tag" :to="{ path: '/', query: { tag } }">{{
     tag
-  }}</nuxt-link>
+  }}</NuxtLink>
 </template>
 
-<script>
-export default {
-  props: {
-    tag: {
-      type: String,
-      required: true,
-    },
+<script setup>
+defineProps({
+  tag: {
+    type: String,
+    required: true,
   },
-}
+})
 </script>
 
 <style scoped>

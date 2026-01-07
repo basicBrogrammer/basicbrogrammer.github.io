@@ -1,66 +1,59 @@
-export default {
-  // Disable server-side rendering (https://go.nuxtjs.dev/ssr-mode)
+// https://nuxt.com/docs/api/configuration/nuxt-config
+export default defineNuxtConfig({
+  // Disable server-side rendering
   ssr: false,
 
-  // Target (https://go.nuxtjs.dev/config-target)
-  target: 'static',
-
-  // Global page headers (https://go.nuxtjs.dev/config-head)
-  head: {
-    title: 'Basically Brogramming',
-    meta: [
-      { charset: 'utf-8' },
-      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      {
-        hid: 'description',
-        name: 'description',
-        content: "I'm a dude. He's a dude. She's a dude. We're all dudes. HEY!",
-      },
-    ],
-    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
-  },
-
-  // Global CSS (https://go.nuxtjs.dev/config-css)
-  css: ['~/assets/global.css'],
-
-  // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
-  plugins: [],
-
-  // Auto import components (https://go.nuxtjs.dev/config-components)
-  components: true,
-
-  // Modules for dev and build (recommended) (https://go.nuxtjs.dev/config-modules)
-  buildModules: [
-    // https://go.nuxtjs.dev/eslint
-    '@nuxtjs/eslint-module',
-    // https://go.nuxtjs.dev/stylelint
-    '@nuxtjs/stylelint-module',
-    // https://go.nuxtjs.dev/tailwindcss
-    '@nuxtjs/tailwindcss',
-  ],
-
-  // Modules (https://go.nuxtjs.dev/config-modules)
-  modules: [
-    // https://go.nuxtjs.dev/pwa
-    '@nuxtjs/pwa',
-    // https://go.nuxtjs.dev/content
-    '@nuxt/content',
-  ],
-
-  // Content module configuration (https://go.nuxtjs.dev/config-content)
-  content: {},
-
-  // Build Configuration (https://go.nuxtjs.dev/config-build)
-  build: {},
-  // needed to generate dynamic tags that aren't in links
-  generate: {
-    async routes() {
-      const { $content } = require('@nuxt/content')
-      const dynamicRoutes = await $content('articles').only(['slug']).fetch()
-
-      return dynamicRoutes.map((myroute) =>
-        myroute.slug === '/index' ? '/' : '/blog/' + myroute.slug
-      )
+  // Global page headers
+  app: {
+    head: {
+      title: 'Basically Brogramming',
+      meta: [
+        { charset: 'utf-8' },
+        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+        {
+          name: 'description',
+          content: "I'm a dude. He's a dude. She's a dude. We're all dudes. HEY!",
+        },
+      ],
+      link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
     },
   },
-}
+
+  // Global CSS
+  css: ['~/assets/global.css'],
+
+  // Auto import components
+  components: true,
+
+  // Modules
+  modules: [
+    '@nuxtjs/tailwindcss',
+    '@nuxt/content',
+    '@vite-pwa/nuxt',
+  ],
+
+  // Content module configuration
+  content: {},
+
+  // PWA configuration
+  pwa: {
+    manifest: {
+      name: 'Basically Brogramming',
+      short_name: 'BasicBrogramming',
+      description: "I'm a dude. He's a dude. She's a dude. We're all dudes. HEY!",
+    },
+  },
+
+  // Development tools
+  devtools: { enabled: true },
+
+  // Nitro configuration for static generation
+  nitro: {
+    prerender: {
+      crawlLinks: true,
+      routes: ['/'],
+    },
+  },
+
+  compatibilityDate: '2025-01-07',
+})

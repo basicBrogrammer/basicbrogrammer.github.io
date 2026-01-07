@@ -1,17 +1,17 @@
 <template>
   <div class="my-4 border-2 rounded-lg border-primary">
-    <nuxt-link :to="{ name: 'blog-slug', params: { slug: article.slug } }">
+    <NuxtLink :to="`/blog/${article.slug}`">
       <div
         class="cover-img"
         :style="{ backgroundImage: `url(${article.cover_image})` }"
       ></div>
-    </nuxt-link>
+    </NuxtLink>
     <div class="p-3">
-      <nuxt-link :to="{ name: 'blog-slug', params: { slug: article.slug } }">
+      <NuxtLink :to="`/blog/${article.slug}`">
         <h3 class="font-bold tracking-wider text-center color-secondary">
           {{ article.title }}
         </h3>
-      </nuxt-link>
+      </NuxtLink>
       <p class="py-1 my-2 font-medium border-t-2">
         {{ article.description }}
       </p>
@@ -20,23 +20,17 @@
   </div>
 </template>
 
-<script>
-import ArticleTag from '@/components/ArticleTag'
+<script setup>
+const props = defineProps({
+  article: {
+    type: Object,
+    required: true,
+  },
+})
 
-export default {
-  components: { ArticleTag },
-  props: {
-    article: {
-      type: Object,
-      required: true,
-    },
-  },
-  computed: {
-    tags() {
-      return this.article.tags.split(',').map((tag) => tag.trim())
-    },
-  },
-}
+const tags = computed(() => {
+  return props.article.tags.split(',').map((tag) => tag.trim())
+})
 </script>
 
 <style scoped>

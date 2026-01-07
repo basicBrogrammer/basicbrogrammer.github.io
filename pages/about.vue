@@ -1,17 +1,14 @@
 <template>
   <div id="about-page">
-    <nuxt-content :document="article" class="my-2" />
+    <ContentRenderer v-if="article" :value="article" class="my-2" />
   </div>
 </template>
 
-<script>
-export default {
-  async asyncData({ $content, params }) {
-    const article = await $content('about').fetch()
-
-    return { article }
-  },
-}
+<script setup>
+const { data: article } = await useAsyncData(
+  'about',
+  () => queryContent('about').findOne()
+)
 </script>
 
 <style>
