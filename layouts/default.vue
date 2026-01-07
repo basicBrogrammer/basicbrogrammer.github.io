@@ -16,56 +16,52 @@
         </svg>
       </button>
 
-      <nuxt-link
+      <NuxtLink
         to="/"
         class="text-lg font-semibold tracking-widest text-gray-900 uppercase rounded-lg dark-mode:text-white focus:outline-none focus:shadow-outline"
-        >BasicBrogrammer</nuxt-link
+        >BasicBrogrammer</NuxtLink
       >
     </div>
     <div class="main-body">
-      <transition name="sidebar-slide">
+      <Transition name="sidebar-slide">
         <SideBar v-if="showSideBar" />
-      </transition>
+      </Transition>
       <article class="w-screen p-4 md:w-3/4">
         <div class="mx-auto w-full md:w-3/4">
-          <Nuxt />
+          <slot />
         </div>
       </article>
     </div>
   </main>
 </template>
-<script>
-import SideBar from '@/components/SideBar'
 
-export default {
-  components: { SideBar },
-  data() {
-    return {
-      sideNavOpen: false,
-      windowWidth: window.innerWidth,
-    }
-  },
-  computed: {
-    showSideBar() {
-      return this.windowWidth > 767 || this.sideNavOpen
-    },
-    sidebarToggleIcon() {
-      return this.sideNavOpen
-        ? 'M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z'
-        : 'M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM9 15a1 1 0 011-1h6a1 1 0 110 2h-6a1 1 0 01-1-1z'
-    },
-  },
-  watch: {
-    $route() {
-      this.sideNavOpen = false
-    },
-  },
-  mounted() {
+<script setup>
+const route = useRoute()
+const sideNavOpen = ref(false)
+const windowWidth = ref(768)
+
+const showSideBar = computed(() => {
+  return windowWidth.value > 767 || sideNavOpen.value
+})
+
+const sidebarToggleIcon = computed(() => {
+  return sideNavOpen.value
+    ? 'M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z'
+    : 'M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM9 15a1 1 0 011-1h6a1 1 0 110 2h-6a1 1 0 01-1-1z'
+})
+
+watch(() => route.path, () => {
+  sideNavOpen.value = false
+})
+
+onMounted(() => {
+  if (process.client) {
+    windowWidth.value = window.innerWidth
     window.addEventListener('resize', () => {
-      this.windowWidth = window.innerWidth
+      windowWidth.value = window.innerWidth
     })
-  },
-}
+  }
+})
 </script>
 
 <style>

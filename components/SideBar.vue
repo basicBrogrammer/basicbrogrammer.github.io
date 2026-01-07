@@ -4,24 +4,24 @@
   >
     <ul class="flex flex-col items-start font-semibold tracking-wider">
       <li class="self-center">
-        <nuxt-link :to="{ name: 'index' }">
+        <NuxtLink to="/">
           <img
             class="w-24 h-24 border-4 border-double rounded-full border-primary"
             src="~/assets/images/prof-pic.jpg"
             alt="Jeremy Ward"
           />
-        </nuxt-link>
+        </NuxtLink>
       </li>
       <li>
-        <nuxt-link to="/about" @click="console.log('hey there')">
+        <NuxtLink to="/about">
           About
-        </nuxt-link>
+        </NuxtLink>
       </li>
       <li>
-        <nuxt-link to="/"> Blog </nuxt-link>
+        <NuxtLink to="/"> Blog </NuxtLink>
       </li>
       <!-- <li> -->
-      <!-- <nuxt-link to="/portfolio"> /Works </nuxt-link> -->
+      <!-- <NuxtLink to="/portfolio"> /Works </NuxtLink> -->
       <!-- </li> -->
       <li v-for="social in socials" :key="social.id" class="md:hidden">
         <a :href="social.href" target="_blank">
@@ -42,33 +42,24 @@
   </aside>
 </template>
 
-<script>
-import SocialIcon from '@/components/SocialIcon'
-
-export default {
-  components: { SocialIcon },
-  data() {
-    return {
-      socials: [
-        {
-          id: 'github',
-          text: 'GitHub',
-          href: 'https://github.com/basicbrogrammer',
-        },
-        {
-          id: 'twitter',
-          text: 'Twitter',
-          href: 'https://twitter.com/basicbrogrammer',
-        },
-        {
-          id: 'instagram',
-          text: 'Instagram',
-          href: 'https://instagram.com/basicbrogrammer',
-        },
-      ],
-    }
+<script setup>
+const socials = [
+  {
+    id: 'github',
+    text: 'GitHub',
+    href: 'https://github.com/basicbrogrammer',
   },
-}
+  {
+    id: 'twitter',
+    text: 'Twitter',
+    href: 'https://twitter.com/basicbrogrammer',
+  },
+  {
+    id: 'instagram',
+    text: 'Instagram',
+    href: 'https://instagram.com/basicbrogrammer',
+  },
+]
 </script>
 
 <style scoped>

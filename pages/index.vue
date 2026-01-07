@@ -1,40 +1,45 @@
 <template>
   <div>
     <ArticleCard
-      v-for="article in articles"
+      v-for="article in filteredArticles"
       :key="article.slug"
       :article="article"
     />
   </div>
 </template>
 
-<script>
-import ArticleCard from '@/components/ArticleCard'
+<script setup>
+const route = useRoute()
+const tag = computed(() => route.query.tag || '')
 
-export default {
-  components: { ArticleCard },
-  watchQuery: ['tag'],
-  async asyncData({ $content, params, query }) {
-    const articles = await $content('articles')
-      .only([
-        'title',
-        'description',
-        'img',
-        'slug',
-        'tags',
-        'cover_image',
-        'datePosted',
-      ])
-      .sortBy('datePosted', 'desc')
-      .where({ tags: { $contains: query.tag || '' }, published: true })
-      .sortBy('createdAt', 'asc')
-      .fetch()
+const { data: articles } = await useAsyncData(
+  'articles',
+  () => queryContent('articles')
+    .only([
+      'title',
+      'description',
+      'img',
+      'slug',
+      'tags',
+      'cover_image',
+      'datePosted',
+    ])
+    .where({ published: true })
+    .sort({ datePosted: -1 })
+    .find(),
+  {
+    watch: [tag]
+  }
+)
 
-    return {
-      articles,
-    }
-  },
-}
+// Filter by tag if specified
+const filteredArticles = computed(() => {
+  if (!articles.value) return []
+  if (!tag.value) return articles.value
+  return articles.value.filter(article =>
+    article.tags && article.tags.includes(tag.value)
+  )
+})
 </script>
 
 <style>
