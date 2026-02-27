@@ -57,7 +57,7 @@ export default [
         useRoute: 'readonly',
         useRouter: 'readonly',
         useAsyncData: 'readonly',
-        queryContent: 'readonly',
+        queryCollection: 'readonly',
         ref: 'readonly',
         computed: 'readonly',
         watch: 'readonly',

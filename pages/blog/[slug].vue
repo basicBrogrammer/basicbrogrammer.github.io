@@ -13,18 +13,40 @@
 
 <script setup>
 const route = useRoute()
-const { data: article } = await useAsyncData(
-  `article-${route.params.slug}`,
-  () => queryContent('articles', route.params.slug).findOne()
-)
-
-const tags = computed(() => {
-  if (!article.value?.tags) return []
-  return article.value.tags.split(',').map((tag) => tag.trim())
+const slug = computed(() => {
+  const routeSlug = route.params.slug
+  return Array.isArray(routeSlug) ? routeSlug[0] : routeSlug
 })
 
-const formatDate = (date) => {
-  const options = { year: 'numeric', month: 'long', day: 'numeric' }
-  return new Date(date).toLocaleDateString('en', options)
+const toTagList = (rawTags) => {
+  if (Array.isArray(rawTags)) {
+    return rawTags.map((tag) => String(tag).trim()).filter(Boolean)
+  }
+  if (typeof rawTags === 'string') {
+    return rawTags.split(',').map((tag) => tag.trim()).filter(Boolean)
+  }
+  return []
 }
+
+const { data: article } = await useAsyncData(`article-${slug.value}`, async () => {
+  if (!slug.value) return null
+  const docs = await queryCollection('articles').all()
+  const doc = docs.find((item) => {
+    const itemStem = typeof item.stem === 'string' ? item.stem.split('/').pop() : ''
+    const itemPathSlug = typeof item.path === 'string' ? item.path.split('/').filter(Boolean).pop() : ''
+    return itemStem === slug.value || itemPathSlug === slug.value
+  })
+
+  if (!doc) return null
+
+  const meta = doc.meta && typeof doc.meta === 'object' ? doc.meta : {}
+  return {
+    ...doc,
+    ...meta,
+    tags: toTagList(meta.tags || doc.tags),
+    cover_image: meta.cover_image || doc.cover_image || '',
+  }
+})
+
+const tags = computed(() => article.value?.tags || [])
 </script>
