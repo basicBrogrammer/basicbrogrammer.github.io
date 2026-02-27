@@ -29,7 +29,13 @@ const props = defineProps({
 })
 
 const tags = computed(() => {
-  return props.article.tags.split(',').map((tag) => tag.trim())
+  if (Array.isArray(props.article.tags)) {
+    return props.article.tags.map((tag) => String(tag).trim()).filter(Boolean)
+  }
+  if (typeof props.article.tags === 'string') {
+    return props.article.tags.split(',').map((tag) => tag.trim()).filter(Boolean)
+  }
+  return []
 })
 </script>
 

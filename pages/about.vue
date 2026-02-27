@@ -5,10 +5,10 @@
 </template>
 
 <script setup>
-const { data: article } = await useAsyncData(
-  'about',
-  () => queryContent('about').findOne()
-)
+const { data: article } = await useAsyncData('about', async () => {
+  const pages = await queryCollection('pages').all()
+  return pages.find((page) => page.path === '/about' || page.stem === 'about') || null
+})
 </script>
 
 <style>
